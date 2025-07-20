@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>пытаемся справиться с выгоранием 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffe0f0, #fff5fa);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      color: #444;
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 50px;
+      background: radial-gradient(circle at top, #ff8cb5, #ff5e94);
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border-bottom-left-radius: 60% 8%;
+      border-bottom-right-radius: 60% 8%;
+      animation: fadeInDown 1.2s ease;
+    }
+
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80vh;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(255,192,203,0.2)), url('her-image.png') no-repeat center/cover;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .hero-text {
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      max-width: 90%;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    section {
+      padding: 60px 20px;
+    }
+
+    .block {
+      max-width: 720px;
+      margin: 0 auto 50px;
+      background: #fffdfd;
+      border-radius: 28px;
+      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.15);
+      padding: 40px 30px;
+      transition: transform 0.3s ease;
+      animation: fadeInBlock 1s ease both;
+    }
+
+    .block:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(255, 105, 180, 0.25);
+    }
+
+    .block h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: #ff4e96;
+      margin-bottom: 18px;
+    }
+
+    .block p {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .photo-columns {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .photo-row {
+      display: flex;
+      flex-wrap: wrap;
+      background: #fff6fa;
+      border-radius: 22px;
+      box-shadow: 0 8px 25px rgba(255, 105, 180, 0.15);
+      overflow: hidden;
+    }
+
+    .photo-frame-large {
+      flex: 1 1 300px;
+      min-height: 360px;
+      background-position: center;
+      background-size: cover;
+      background-color: #ffe6f1;
+    }
+
+    .photo-text {
+      flex: 1 1 300px;
+      padding: 30px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .love-message {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      margin: 80px auto 40px;
+      color: #ff69b4;
+      animation: pulse 2s ease-in-out infinite alternate;
+      text-shadow: 0 0 15px rgba(255,105,180,0.4);
+    }
+
+    .heart {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #ff69b4;
+      transform: rotate(45deg);
+      animation: float 6s linear infinite;
+    }
+
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #ff69b4;
+      border-radius: 50%;
+    }
+
+    .heart::before { top: -7px; left: 0; }
+    .heart::after { left: -7px; top: 0; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInBlock {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-800px) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        font-size: 28px;
+        padding: 60px 10px 40px;
+      }
+
+      .hero {
+        height: 60vh;
+      }
+
+      .hero-text {
+        font-size: 22px;
+      }
+
+      .block {
+        padding: 30px 20px;
+      }
+
+      .photo-row {
+        flex-direction: column;
+      }
+
+      .photo-text {
+        padding: 20px;
+        font-size: 17px;
+      }
+
+      .love-message {
+        font-size: 26px;
+        margin: 60px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Подустал я и решил сделать тебе приятно <br>(❁´◡`❁)</header>
+
+  <div class="hero">
+    <div class="hero-text">Я тебя безумно люблю и решил посветить тебе такой небольшой сайтик ✨</div>
+  </div>
+
+  <section>
+    <div class="block">
+      <h2>ТЫ ПОСТУПИЛА 🎉</h2>
+      <p>На самом деле я безумно тобой горжусь, я понимаю, что сам врядли смог бы сделать так же, однако ты взяла и поступила. Ты огромнейшая молодец))</p>
+    </div>
+    <div class="block">
+      <h2>Про то насколько ты красивая</h2>
+      <p>Странное название пунктика, тк просто взять и описать насколько ты красивая не удасться, но всё же я попытаюсь. На самом деле мне нравится в тебе всё, даже то, что обычно считается не очень красивым. Например твои зубки, как по мне их форма это именно как изюминка делающая тебя тобой, мне действительно не передать совами насколько красивой ты для меня являешься, и даже если ты думаешь, что что-то эту красоту портит, то я найду в этом ещё одну изюминку)
+      </p>
+    </div>
+
+    <div class="photo-columns">
+      <div class="photo-row">
+        <div class="photo-frame-large" style="background-image: url('IMG_6612.JPG');"></div>
+        <div class="photo-text">Бляха, линзы. Я на самом деле думал, что ещё красивее тебе быть некуда, но когда ты начала носить линзы... я прозрел. Не то, что тебе не идут очки, напротив, они тебе очень идут, НО в линзах мне в разы проще увидеть твоё лицо, а оно у тебя наимилейшее из всех всто я видел))</div>
+      </div>
+      <div class="photo-row">
+        <div class="photo-frame-large" style="background-image: url('IMG_5996.JPG');"></div>
+        <div class="photo-text">Довольни)) На самом деле ради твоей улыбки я готов на всё) она во мне вызывает какие-то доселе невиданные эмоции, как будто смесь желания защитить и заставить чаще улыбаться и радоваться)</div>
+      </div>
+      <div class="photo-row">
+        <div class="photo-frame-large" style="background-image: url('IMG_5574.JPG');"></div>
+        <div class="photo-text">Бляха, хочу сказать про талию, а точнее про твою фигуру в целом. Просто резко понял, что довольно редко об этом говорил. ОНА У ТЕБЯ АХУЕННАЯ. и я понимаю, что это не просто генетика, а ещё и твои ежедневные тренировки, ты на самом деле большая молодец, ведь сочитать тонкую талию, большие бубы и упругую прекраснейшую попку это тяжело))</div>
+      </div>
+    </div>
+
+    <div class="love-message">Я тебя люблю, солнышко (👉ﾟヮﾟ)👉</div>
+  </section>
+<audio id="bgMusic" src="Doki.mp3" autoplay loop preload="auto"></audio>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const music = document.getElementById("bgMusic");
+      music.volume = 0.2;
+      function enableAudioOnce() {
+        music.play().catch(e => console.warn("Автозвук не запустился:", e));
+        document.removeEventListener("click", enableAudioOnce);
+      }
+      document.addEventListener("click", enableAudioOnce);
+    });
+    // Всплывающие сердечки
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.bottom = "-20px";
+      heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+      heart.style.opacity = Math.random();
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }
+
+    setInterval(createHeart, 500);
+  </script>
+</body>
+</html>
