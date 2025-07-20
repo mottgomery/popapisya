@@ -250,8 +250,17 @@
 
     <div class="love-message">Я тебя люблю, солнышко (👉ﾟヮﾟ)👉</div>
   </section>
-
+<audio id="bgMusic" src="Doki.mp3" autoplay loop preload="auto"></audio>
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const music = document.getElementById("bgMusic");
+      music.volume = 0.2;
+      function enableAudioOnce() {
+        music.play().catch(e => console.warn("Автозвук не запустился:", e));
+        document.removeEventListener("click", enableAudioOnce);
+      }
+      document.addEventListener("click", enableAudioOnce);
+    });
     // Всплывающие сердечки
     function createHeart() {
       const heart = document.createElement("div");
