@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>опа ( ͡~ ͜ʖ ͡°)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at center, #222, #111);
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    .start-button {
+      padding: 20px 50px;
+      font-size: 24px;
+      color: #fff;
+      background: linear-gradient(135deg, #ff6fa7, #ff3e9d);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+      z-index: 2;
+      position: relative;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .start-button.clicked {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .suck-effect {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #ff6fa7, #ff3e9d);
+      border-radius: 50%;
+      z-index: 3;
+      transition: transform 1.2s ease-in-out;
+    }
+
+    .suck-effect.expand {
+      transform: translate(-50%, -50%) scale(25);
+    }
+
+    .color-transition {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #ffe1f0, #ffc8e4);
+      opacity: 0;
+      z-index: 4;
+      transition: opacity 0.8s ease-in-out;
+      pointer-events: none;
+    }
+
+    .color-transition.show {
+      opacity: 1;
+    }
+    @keyframes shake {
+  0% { transform: translate(1px, 1px); }
+  25% { transform: translate(-1px, -2px); }
+  50% { transform: translate(2px, 2px); }
+  75% { transform: translate(-1px, 2px); }
+  100% { transform: translate(1px, -1px); }
+}
+
+body.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ff7fb2;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  transition: all 1s ease-in-out;
+  opacity: 1;
+  transform: scale(1);
+}
+.suck-effect {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0) rotate(0deg);
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, #ff99c8, #ff3e9d);
+  border-radius: 50%;
+  z-index: 3;
+  transition: transform 1.2s ease-in-out, rotate 1.2s ease-in-out;
+  box-shadow: 0 0 60px 20px rgba(255, 105, 180, 0.5);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.suck-effect.expand {
+  transform: translate(-50%, -50%) scale(25) rotate(1080deg);
+  opacity: 1;
+}
+
+/* Блик по центру после всасывания */
+.flash {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.7;
+  z-index: 10;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: flashExpand 0.4s ease-out forwards;
+}
+
+@keyframes flashExpand {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.8;
+  }
+  100% {
+    width: 100vw;
+    height: 100vw;
+    opacity: 0;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <button class="start-button" id="startBtn">✨</button>
+  </div>
+
+  <div class="suck-effect" id="suckEffect"></div>
+  <div class="color-transition" id="colorTransition"></div>
+
+<script>
+  const btn = document.getElementById("startBtn");
+  const suck = document.getElementById("suckEffect");
+  const bg = document.getElementById("colorTransition");
+
+  // Создаем частички
+  function createParticles() {
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement("div");
+      particle.classList.add("particle");
+      document.body.appendChild(particle);
+
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+
+      setTimeout(() => {
+        particle.style.transform = `translate(-50%, -50%) scale(0)`;
+        particle.style.left = "50%";
+        particle.style.top = "50%";
+        particle.style.opacity = "0";
+      }, 100);
+    }
+  }
+
+btn.addEventListener("click", () => {
+  const sound = document.getElementById("sfx");
+  sound.currentTime = 0; // на случай повторных кликов
+  sound.play().catch((e) => {
+    console.warn("Не удалось проиграть звук:", e);
+  });
+
+  btn.classList.add("clicked");
+  suck.classList.add("expand");
+  document.body.classList.add("shake");
+
+  createParticles();
+
+  setTimeout(() => {
+    const flash = document.createElement("div");
+    flash.classList.add("flash");
+    document.body.appendChild(flash);
+  }, 600);
+
+  setTimeout(() => {
+    bg.classList.add("show");
+  }, 900);
+
+  setTimeout(() => {
+    window.location.href = "quiz.html";
+  }, 1800);
+});
+
+  // Звук
+sound.play();
+
+// Кнопка исчезает
+btn.classList.add("clicked");
+suck.classList.add("expand");
+document.body.classList.add("shake");
+createParticles();
+
+// Блик
+setTimeout(() => {
+  const flash = document.createElement("div");
+  flash.classList.add("flash");
+  document.body.appendChild(flash);
+}, 600);
+
+// Цветовой фон
+setTimeout(() => {
+  bg.classList.add("show");
+}, 900);
+
+// Переход
+sound.onended = () => {
+  window.location.href = "quiz.html";
+};
+
+setTimeout(() => {
+  window.location.href = "quiz.html";
+}, 1800); // если звук 2.5–3 секунды
+
+</script>
+
+<audio id="sfx" src="swoosh2.mp3" preload="auto"></audio>
+
+</body>
+</html>

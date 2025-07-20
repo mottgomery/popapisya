@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>окак</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at center, #ffe1f0, #ffc8e4);
+      font-family: 'Poppins', sans-serif;
+      color: #2a2a2a;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeInBody 1s ease forwards;
+    }
+
+    @keyframes fadeInBody {
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      margin-bottom: 30px;
+      color: #ff4e96;
+    }
+
+    input {
+      padding: 15px 25px;
+      font-size: 18px;
+      border-radius: 30px;
+      border: 2px solid #ff9ac2;
+      width: 80%;
+      max-width: 400px;
+      outline: none;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    button {
+      padding: 15px 35px;
+      font-size: 18px;
+      background: linear-gradient(135deg, #ff6fa7, #ff3e9d);
+      color: #fff;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: transform .3s ease;
+      font-weight: 600;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255,105,180,.4);
+    }
+
+    .fade-in { opacity: 0; transform: translateY(30px) scale(.95); animation: fadeInUp .8s ease forwards; }
+    .fade-in.delay-1 { animation-delay: .4s; }
+    .fade-in.delay-2 { animation-delay: .8s; }
+    .fade-in.delay-3 { animation-delay: 1.2s; }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    #dialogue-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: calc(100% - 40px);
+      pointer-events: none;
+      min-height: 120px;
+      z-index: 5;
+    }
+
+    .character {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-image: url('pipa.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      border: 2px solid #ff4e96;
+      box-shadow: 0 0 8px rgba(255,105,180,.4);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transform: translateY(-150%);
+      opacity: 0;
+    }
+
+    .character.show {
+      animation: dropIn .8s cubic-bezier(.22,1.61,.36,1) forwards;
+    }
+
+    @keyframes dropIn {
+      0% { transform: translateY(-150%); opacity: 0; }
+      70% { transform: translateY(15%); opacity: 1; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .speech-bubble {
+      position: absolute;
+      bottom: 80px;
+      left: 80px;
+      max-width: 75vw;
+      background: #fff;
+      border-radius: 20px;
+      padding: 15px 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.1);
+      font-size: 18px;
+      color: #b3005f;
+      font-weight: 500;
+      opacity: 0;
+      transform: scale(.8) translateY(10px);
+      transition: opacity .3s ease, transform .3s ease;
+      white-space: pre-wrap;
+      pointer-events: none;
+    }
+
+    .speech-bubble.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .letter-image {
+    display: none;
+    position: fixed;
+    top: 20%; /* Изменили с 50% на 30% чтобы поднять выше */
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 100;
+  }
+
+    .animated-mail {
+      position: absolute;
+      height: 150px;
+      width: 200px;
+      transition: .4s;
+    }
+
+    .body {
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 0 100px 200px;
+      border-color: transparent transparent #e95f55 transparent;
+      z-index: 2;
+    }
+
+    .top-fold {
+      position: absolute;
+      top: 50px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 50px 100px 0 100px;
+      transform-origin: 50% 0%;
+      transition: transform .4s .4s, z-index .2s .4s;
+      border-color: #cf4a43 transparent transparent transparent;
+      z-index: 2;
+    }
+
+    .back-fold {
+      position: absolute;
+      bottom: 0;
+      width: 200px;
+      height: 100px;
+      background: #cf4a43;
+      z-index: 0;
+    }
+
+    .left-fold {
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 50px 0 50px 100px;
+      border-color: transparent transparent transparent #e15349;
+      z-index: 2;
+    }
+
+    .letter {
+      left: 20px;
+      bottom: 0;
+      position: absolute;
+      width: 160px;
+      height: 60px;
+      background: #ffe9f3; /* Тот же цвет, что fullscreen-paper */
+      z-index: 1;
+      overflow: hidden;
+      transition: .4s .2s;
+    }
+
+    .letter-border {
+      height: 10px;
+      width: 100%;
+      background: repeating-linear-gradient(-45deg, #cb5a5e, #cb5a5e 8px, transparent 8px, transparent 18px);
+    }
+
+    .letter-title {
+      margin-top: 10px;
+      margin-left: 5px;
+      height: 10px;
+      width: 40%;
+      background: #cb5a5e;
+    }
+
+    .letter-context {
+      margin-top: 10px;
+      margin-left: 5px;
+      height: 10px;
+      width: 20%;
+      background: #cb5a5e;
+    }
+
+    .letter-stamp {
+      margin-top: 30px;
+      margin-left: 120px;
+      border-radius: 100%;
+      height: 30px;
+      width: 30px;
+      background: #cb5a5e;
+      opacity: 0.3;
+    }
+
+    .shadow {
+      position: absolute;
+      top: 200px;
+      left: 50%;
+      width: 400px;
+      height: 30px;
+      transition: .4s;
+      transform: translateX(-50%);
+      border-radius: 100%;
+      background: radial-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.0), rgba(0,0,0,0.0));
+    }
+
+    .opened .top-fold {
+      transform: rotateX(180deg);
+      z-index: 0;
+      transition: transform .4s, z-index .2s;
+    }
+
+    .opened .letter {
+      height: 180px;
+    }
+
+    .envelope-expand {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffe9f3;
+      z-index: 999;
+      animation: expandLetter 1s ease forwards;
+    }
+
+    @keyframes expandLetter {
+      from { transform: scale(0); opacity: 1; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .letter-context {
+  margin-top: 10px;
+  margin-left: 5px;
+  height: 10px;
+  width: 20%;
+  background: #ffe9f3; /* Цвет бумаги */
+  cursor: pointer;
+  z-index: 10;
+}
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.letter-image.show-letter {
+  display: block;
+  animation: fadeInScale 0.8s ease forwards;
+}
+
+.fullscreen-paper {
+  position: fixed;
+  background-color: #ffe9f3;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  animation: expandPaper 1s ease forwards;
+  transform-origin: 50% 15%; /* старт анимации примерно от места письма */
+}
+
+
+
+@keyframes expandPaper {
+  from {
+    transform: scale(0.2);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <h1 class="fade-in delay-1">Кого я люблю больше всех? (～￣▽￣)～</h1>
+  <input type="text" id="answer" class="fade-in delay-2" placeholder="Введите имя или слово..." />
+  <br />
+  <button onclick="checkAnswer()" class="fade-in delay-3">чекнуть ответ</button>
+
+  <div id="dialogue-container">
+    <div id="char" class="character"></div>
+    <div id="speech" class="speech-bubble"></div>
+  </div>
+
+  <div class="letter-image" id="letter">
+    <div class="animated-mail" onclick="openEnvelope()">
+      <div class="back-fold"></div>
+      <div class="letter" onclick="expandLetter(event)">
+  <div class="letter-border"></div>
+  <div class="letter-title"></div>
+  <div class="letter-context"></div>
+  <div class="letter-stamp"><div class="letter-stamp-inner"></div></div>
+</div>
+
+      <div class="top-fold"></div>
+      <div class="body"></div>
+      <div class="left-fold"></div>
+    </div>
+    <div class="shadow"></div>
+  </div>
+
+  <audio id="bgMusic" src="undertale_002. Start Menu.mp3" autoplay loop preload="auto"></audio>
+  <audio id="typeSound" src="voice_sans.mp3" preload="auto"></audio>
+  <script>
+    
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      const music = document.getElementById("bgMusic");
+      music.volume = 0.2;
+      function enableAudioOnce() {
+        music.play().catch(e => console.warn("Автозвук не запустился:", e));
+        document.removeEventListener("click", enableAudioOnce);
+      }
+      document.addEventListener("click", enableAudioOnce);
+    });
+
+    const speech = document.getElementById('speech');
+    const character = document.getElementById('char');
+    let characterShown = false;
+
+    function showCharacter() {
+      if (!characterShown) {
+        character.classList.add('show');
+        characterShown = true;
+      }
+    }
+
+    function typeText(text) {
+      speech.classList.remove('show');
+      speech.textContent = '';
+      void speech.offsetWidth;
+      speech.classList.add('show');
+      showCharacter();
+      let i = 0;
+      const timer = setInterval(() => {
+        speech.textContent += text[i];
+        try {
+          const s = document.getElementById("typeSound").cloneNode();
+          s.volume = 0.2;
+          s.play();
+        } catch {}
+        i++;
+        if (i === text.length) clearInterval(timer);
+      }, 40);
+    }
+                          const letter = document.getElementById('letter');
+
+                          function openEnvelope() {
+                            document.querySelector('.animated-mail').classList.add('opened');
+                          }
+
+                          function expandLetter(e) {
+                            e.stopPropagation();
+                            const exp = document.createElement('div');
+                            exp.className = 'fullscreen-paper';  // используем уже определённый стиль
+                            document.body.appendChild(exp);
+                            setTimeout(() => {
+                              window.location.href = 'main.html';
+                            }, 1000);
+                          }
+
+
+    function checkAnswer(){
+      const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+
+      const correctAnswers = [
+        'меня','меня!','меня.','меня <3','меня)','меня:)','меня🥺','меня💖',
+        'меня люблю','меня любишь','я','я люблю','я люблю тебя','я тебя люблю',
+        'люблю меня','любишь меня','любишь','люблю','любовь моя','мой','моя',
+        'мой самый лучший','мой лучший','мой единственный','ты меня любишь','ты любишь меня','меня ты любишь', 'вику', 'викторию', 'викторию олеговну', 'чеботарёву', 'чеботарёву викторию', 'чеботарёву викторию олеговну'
+      ].map(a=>a.toLowerCase());
+
+      if(correctAnswers.includes(userAnswer)){
+        letter.classList.add('show-letter');
+
+        return;
+      }
+      const replies = {
+        'маму':'мамо святое',
+        '':'пустота... креативно',
+        'привет':'хай',
+        'кошку':'котик это круто, но я всё ж не это имел в виду',
+        'трикси':'котик это круто, но я всё ж не это имел в виду',
+        'котика':'котик это круто, но я всё ж не это имел в виду',
+        'киску':'😏',
+        'никого':'печально звучит...',
+        'окак':'отак',
+        'дану?':'ну да',
+        'меня?':'так, а теперь без вопросов тут.',
+        'папу':'папо рыбалка класс',
+        'брата':'брат — это крепко, но не то',
+        'друга':'дружба — это свято, но я не о ней',
+        'собаку':'собачка — друг человека, но не мой ответ',
+        'любимую':'ага, романтика чувствуется, но не сюда',
+        'жену':'только если тебя в будущем)',
+        'мужа':'bruh',
+        'подругу':'подруга — хорошо, но я не об этом',
+        'родителей':'семья — это важно, но не сюда',
+        'детей':'дети — это круто, но не ответ',
+        'сестру':'сестра — близко, но не то',
+        'парня':'парень — интересный вариант, но нет',
+        'любимого':'любимый — почти, но нет',
+        'себя':'я конечн эгоист, но не это',
+        'пельмени': 'пельмешки хороши... но нет 🥟',
+        'чай': 'горячо. но мимо ☕',
+        'шрек': 'Люююююбофф в болоте 💚',
+        'котлеты': 'а к ним пюре где?',
+        'репчатый лук': 'ты плачешь, когда его режешь, но я не о нём 😢',
+        'путин': 'политика тут ни при чём 😂',
+        'алиса': 'ой, ну она умная конечно, но не я',
+        'чатгпт': 'близко, но всё-таки не я 😎',
+        'сама': 'вот это поворот',
+        'айфон': 'в нём любовь есть, но не та, что я искал',
+        'хз': 'ну давай попробуем ещё раз',
+        'лол': 'не лолкай — чувствуй 💘',
+        'жопа': 'ну это уже хамство (или анатомия?) 🙄',
+        'арбуз': 'сладко, но не туда 🍉',
+        'картошка': 'пюрешка с сосиской forever, но всё же...',
+        'луна': 'поэтично, но не ответ 🌙',
+        'я не знаю': 'Клянись'  
+      };
+      
+      const reply = replies[userAnswer] || 'вот этот ответ я и не продумал, придумай что-то ещё (●\'◡\'●)';
+      typeText(reply);
+    }
+
+  
+
+</script>
+
+</body>
+</html>
